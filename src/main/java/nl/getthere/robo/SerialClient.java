@@ -1,5 +1,6 @@
 package nl.getthere.robo;
 
+import java.awt.font.NumericShaper.Range;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -13,7 +14,7 @@ import gnu.io.SerialPort;
  *
  * @author woelen
  */
-public class SerialClient implements ISerialClient  {
+public class SerialClient implements ISerialClient {
 	InputStream in;
 	OutputStream out;
 	RobotData robotData;
@@ -61,7 +62,8 @@ public class SerialClient implements ISerialClient  {
 					System.out.println("Error: Only serial ports are handled by this example.");
 				}
 			}
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		}
 
 	}
 
@@ -75,12 +77,39 @@ public class SerialClient implements ISerialClient  {
 			this.robotData = robotData;
 		}
 
+		private enum SensorStreamState {
+			BODY_DATA, GUN_DATA, UNKNOWN
+		}
+
+		@Override
 		public void run() {
 			byte[] buffer = new byte[1024];
 			int len = -1;
+			SensorStreamState readState = SensorStreamState.UNKNOWN;
 			try {
 				while ((len = this.in.read(buffer)) > -1) {
-					System.out.print(new String(buffer, 0, len));
+					byte sensorByte = buffer[0];
+					switch (sensorByte) {
+						case (byte) 0xA:
+							readState = SensorStreamState.BODY_DATA;
+							break;
+						case (byte) 0xB:
+							readState = SensorStreamState.GUN_DATA;
+							break;
+						default:
+							switch (readState) {
+								case BODY_DATA:
+									this.robotData.getBodyDistance().set(sensorByte);
+									break;
+								case GUN_DATA:
+									this.robotData.getGunDistance().set(sensorByte);
+									break;
+								default:
+									//No sensor stream state is set. ignore.
+									break;
+							}
+							break;
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -101,11 +130,11 @@ public class SerialClient implements ISerialClient  {
 			out.write(data);
 		} catch (IOException e) {
 			if (again > 0) {
-				writeAgain(data, again-1);
+				writeAgain(data, again - 1);
 			}
 		}
 	}
-	
+
 	@Override
 	public void setRightSpeed(int val) {
 		if (val > 0) {
@@ -128,12 +157,12 @@ public class SerialClient implements ISerialClient  {
 	}
 
 	@Override
-	public void fireRocket()  {
+	public void fireRocket() {
 		write((byte) 0x05);
 	}
 
 	@Override
-	public void setServoDirection(int degrees)  {
+	public void setServoDirection(int degrees) {
 		if (degrees < 0 || degrees > 180) {
 			throw new IllegalArgumentException();
 		}
@@ -148,18 +177,18 @@ public class SerialClient implements ISerialClient  {
 	}
 
 	@Override
-	public void fullStop()  {
+	public void fullStop() {
 		write((byte) 0x08);
 	}
 
 	@Override
-	public int getBodyDistance()  {
+	public int getBodyDistance() {
 		//		A0    -  daarna twee bytes met afstand   | deze waarde ontvang je 60 ms
 		return -1;
 	}
 
 	@Override
-	public int getGunDistance()  {
+	public int getGunDistance() {
 		//		B0   -   daarna twee bytes met afstand    | deze waarde ontvang je na commando 0x07
 		return -1;
 	}
