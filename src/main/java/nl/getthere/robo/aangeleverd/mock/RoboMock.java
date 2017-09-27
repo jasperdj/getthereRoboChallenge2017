@@ -2,9 +2,10 @@ package nl.getthere.robo.aangeleverd.mock;
 
 import java.io.ObjectInputStream.GetField;
 
+import nl.getthere.robo.ICameraClient;
 import nl.getthere.robo.ISerialClient;
 
-public class RoboMock implements ISerialClient {
+public class RoboMock implements ISerialClient, ICameraClient {
     public final static double DELTA_T = 0.02;  // 20 milliseconds
     public final static double BASE_LENGTH = 0.30;
     public final static double MOTOR_RATIO = 250;

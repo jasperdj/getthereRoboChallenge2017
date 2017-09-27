@@ -17,6 +17,4 @@ public interface ISerialClient {
 	int getBodyDistance();
 
 	int getGunDistance();
-	
-	int[] getPosition();
 }

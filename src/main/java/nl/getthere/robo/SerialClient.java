@@ -63,10 +63,4 @@ public class SerialClient implements ISerialClient {
 		//		B0   -   daarna twee bytes met afstand    | deze waarde ontvang je na commando 0x07
 		return -1;
 	}
-
-	@Override
-	public int[] getPosition() {
-		// TODO Auto-generated method stub
-		return new int[] { 0, 0, 0 };
-	}
 }
