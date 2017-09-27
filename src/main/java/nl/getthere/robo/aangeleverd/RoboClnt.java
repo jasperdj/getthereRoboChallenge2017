@@ -42,7 +42,7 @@ public class RoboClnt implements AutoCloseable {
 			out = new DataOutputStream(socket.getOutputStream());
 			in = new BufferedInputStream(socket.getInputStream());
 		} catch (IOException ex) {
-			ex.printStackTrace();	
+			ex.printStackTrace();
 			close();
 		}
 	}
@@ -105,19 +105,14 @@ public class RoboClnt implements AutoCloseable {
 
 	public static void main(String[] args) throws InterruptedException {
 		System.out.println("Running RoboClnt");
-		try (RoboClnt r = new RoboClnt("192.168.0.103")) {
-			int[] val = r.getCoords();
-			for (int v : val) {
-				System.out.println(v);
-			}
-			val = r.getCoords();
-			for (int v : val) {
-				System.out.println(v);
-			}
-			Thread.sleep(500);
-			val = r.getCoords();
-			for (int v : val) {
-				System.out.println(v);
+		try (RoboClnt r = new RoboClnt("192.168.1.33")) {
+			while (true) {
+				int[] val = r.getCoords();
+				for (int v : val) {
+					System.out.print(v + " ");
+				}
+				System.out.println();
+				Thread.sleep(100);
 			}
 		}
 	}
