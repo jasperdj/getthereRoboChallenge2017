@@ -9,7 +9,7 @@ import java.io.OutputStream;
 
 public class TwoWaySerialComm {
 
-	void connect(String portName) throws Exception {
+	public void connect(String portName) throws Exception {
 		CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
 
 		if (portIdentifier.isCurrentlyOwned()) {
