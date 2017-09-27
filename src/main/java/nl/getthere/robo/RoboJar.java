@@ -2,7 +2,7 @@ package nl.getthere.robo;
 
 public class RoboJar {
 
-	private CameraClient cameraClient = new CameraClient();
+	private CameraClient cameraClient = null;
 	private SerialClient serialClient = null;
 
 	public RoboJar() {
