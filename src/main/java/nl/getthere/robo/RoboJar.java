@@ -44,9 +44,9 @@ public class RoboJar {
 				case MOVE_TO:
 					this.handleMoveToCommand();
 					break;
-				case ROTATE:
-					this.handleRotateCommand();
-					break;
+				//case ROTATE:
+				//	this.handleRotateCommand();
+				//	break;
 				case LOOK_AROUND:
 					this.handleLookAroundCommand();
 				default:
@@ -74,6 +74,7 @@ public class RoboJar {
 		}
 	}
 
+	/*
 	private void handleRotateCommand() {
 		RotateCommandParameters parameters = (RotateCommandParameters) this.getCommandStack().peek().getParameters();
 
@@ -105,7 +106,7 @@ public class RoboJar {
 			} catch (InterruptedException ign) {
 			}
 		}
-	}
+	}*/
 
 	private void handleMoveToCommand() {
 		MoveToCommandParameters parameters = (MoveToCommandParameters) this.getCommandStack().peek().getParameters();
@@ -127,7 +128,6 @@ public class RoboJar {
 
 			//Determine direction to travel to
 			int targetRadial = getTargetRadial(position, parameters.getTargetX(), parameters.getTargetY());
-			System.out.println("targetRadial: "+targetRadial);
 			boolean needToRotate = Math.abs(targetRadial - position.getDirection()) > 50;
 			if (needToRotate) {
 				boolean rotateClockWise = false; //TODO welke kant op roteren?
