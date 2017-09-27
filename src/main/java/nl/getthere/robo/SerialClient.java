@@ -159,6 +159,7 @@ public class SerialClient implements ISerialClient {
 	@Override
 	public void fireRocket() {
 		write((byte) 0x05);
+		write((byte) 0x05);
 	}
 
 	@Override
@@ -184,12 +185,12 @@ public class SerialClient implements ISerialClient {
 	@Override
 	public int getBodyDistance() {
 		//		A0    -  daarna twee bytes met afstand   | deze waarde ontvang je 60 ms
-		return -1;
+		return robotData.getBodyDistance().get();
 	}
 
 	@Override
 	public int getGunDistance() {
 		//		B0   -   daarna twee bytes met afstand    | deze waarde ontvang je na commando 0x07
-		return -1;
+		return robotData.getGunDistance().get();
 	}
 }

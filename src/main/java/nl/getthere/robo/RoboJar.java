@@ -12,6 +12,7 @@ import nl.getthere.robo.commandparameters.LookAroundCommandParameters;
 import nl.getthere.robo.commandparameters.MoveToCommandParameters;
 import nl.getthere.robo.commandparameters.RotateCommandParameters;
 
+@SuppressWarnings("ALL")
 public class RoboJar {
 
 	private ICameraClient cameraClient = null;
@@ -34,10 +35,15 @@ public class RoboJar {
 	}
 
 	public void go() {
+		this.getSerialClient().setServoDirection(90);
+
+
 		System.out.println("Search and destroy!");
 		System.out.println("Camera connectie: " + this.getCameraClient().getPosition());
 		System.out.println("Get body distance: " + this.getSerialClient().getBodyDistance());
-		this.getCommandStack().add(new CommandWithParams(Command.MOVE_TO, new MoveToCommandParameters(this.getCameraClient().getPosition().getX() + 100, this.getCameraClient().getPosition().getY() + 100)));
+		/*this.getCommandStack().add(new CommandWithParams(Command.MOVE_TO, new MoveToCommandParameters(this.getCameraClient().getPosition().getX() + 100, this.getCameraClient().getPosition().getY() + 100)));*/
+		this.getCommandStack().add(new CommandWithParams(Command.LOOK_AROUND));
+
 
 		mainLoop: while (!this.getCommandStack().isEmpty()) {
 			switch (this.getCommandStack().peek().getCommand()) {
@@ -49,12 +55,23 @@ public class RoboJar {
 				//	break;
 				case LOOK_AROUND:
 					this.handleLookAroundCommand();
+					break;
+				case SHOOT:
+					this.handleShootCommand();
+				break;
+
 				default:
 					throw new RuntimeException("Don't know how to run command " + this.getCommandStack().peek().getCommand());
 			}
 		}
 
 		System.out.println("Command stack is empty. Exit...");
+	}
+
+	private void handleShootCommand() {
+		System.out.println("Shoot rocket!");
+		this.getSerialClient().fireRocket();
+		this.getCommandStack().pop();
 	}
 
 	private void handleLookAroundCommand() {
@@ -65,12 +82,31 @@ public class RoboJar {
 			Position position = this.getCameraClient().getPosition();
 			System.out.println("Moving from '" + position + "' to '" + parameters + "'");
 
-			//Check if we need to scan or rotate
+			this.getSerialClient().setLeftSpeed(-60);
+			this.getSerialClient().setRightSpeed(60);
+
+			if (this.getSerialClient().getBodyDistance() > 5 && getSerialClient().getBodyDistance() < 50) {
+				this.getSerialClient().setLeftSpeed(0);
+				this.getSerialClient().setRightSpeed(0);
+
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException ign) {
+				}
+
+				this.getSerialClient().fireRocket();
+			}
+
+
+		/*	//Check if we need to scan or rotate
 			if (parameters.getLastScanDirection().isPresent() && Math.abs(parameters.getLastScanDirection().get() - position.getDirection()) > 100) {
-				//Scan
+
+
+
+
 			} else {
 				//Rotate further using the rotateClockWise param
-			}
+			}*/
 		}
 	}
 
@@ -115,6 +151,9 @@ public class RoboJar {
 			//Determine direction
 			Position position = this.getCameraClient().getPosition();
 			System.out.println("Moving from '" + position + "' to '" + parameters + "'");
+			if (this.getSerialClient().getBodyDistance() < 50 &&  this.getSerialClient().getBodyDistance() > 5 ) {
+				this.getCommandStack().add(new CommandWithParams(Command.MOVE_TO, new MoveToCommandParameters(this.getCameraClient().getPosition().getX() + 100, this.getCameraClient().getPosition().getY() + 100)));
+			}
 
 			//Are we there yet?
 			boolean onXTarget = Math.abs(position.getX() - parameters.getTargetX()) < 20;
@@ -123,6 +162,9 @@ public class RoboJar {
 				System.out.println("Target position ('" + parameters + "') reached ('" + position + "')");
 				//Target position reached
 				this.getCommandStack().pop();
+
+				this.getCommandStack().push(new CommandWithParams(Command.LOOK_AROUND));
+
 				break moveLoop;
 			}
 
