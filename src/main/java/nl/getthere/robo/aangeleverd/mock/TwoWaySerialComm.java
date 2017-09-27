@@ -25,7 +25,6 @@ public class TwoWaySerialComm {
 				InputStream in = serialPort.getInputStream();
 				OutputStream out = serialPort.getOutputStream();
 
-				(new Thread(new SerialReader(in))).start();
 				(new Thread(new SerialWriter(out))).start();
 
 			} else {
@@ -34,26 +33,6 @@ public class TwoWaySerialComm {
 		}
 	}
 
-	public static class SerialReader implements Runnable {
-
-		InputStream in;
-
-		public SerialReader(InputStream in) {
-			this.in = in;
-		}
-
-		public void run() {
-			byte[] buffer = new byte[1024];
-			int len = -1;
-			try {
-				while ((len = this.in.read(buffer)) > -1) {
-					System.out.print(new String(buffer, 0, len));
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
 	public static class SerialWriter implements Runnable {
 
