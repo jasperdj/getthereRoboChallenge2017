@@ -59,7 +59,7 @@ public class RoboMock implements ISerialClient, ICameraClient {
                     vl -= dvl;
                     vr -= dvr;
                 }
-                Thread.sleep(40);
+                Thread.sleep(20);
             }
             vl = vr = 0;
         }

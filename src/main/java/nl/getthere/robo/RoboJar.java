@@ -24,13 +24,21 @@ public class RoboJar {
 	}
 
 	public void go() {
-		System.out.println("Search and destrory!");
+		System.out.println("Search and destroy!");
 		System.out.println("Camera connectie: " + Arrays.toString(this.getCameraClient().getPosition()));
 		System.out.println("Get body distance: " + this.getSerialClient().getBodyDistance());
+		this.getSerialClient().setLeftSpeed(100);
+		this.getSerialClient().setRightSpeed(100);
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Position: " + Arrays.toString(this.getCameraClient().getPosition()));
 	}
 
 	public static void main(String[] args) {
-
 		new RoboJar(args.length > 0).go();
 	}
 
