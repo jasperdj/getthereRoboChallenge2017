@@ -71,6 +71,7 @@ public class CameraClient implements AutoCloseable, ICameraClient {
 
 	public int[] getCoords() {
 		if (socket == null) {
+			System.err.println("no socket");
 			return null;
 		}
 
@@ -94,7 +95,7 @@ public class CameraClient implements AutoCloseable, ICameraClient {
 				val = new int[4];
 				val[0] = ntohl(buf, 0);
 				val[1] = ntohl(buf, 4);
-				val[2] = ntohl(buf, 8);
+				val[2] = -ntohl(buf, 8);
 				val[3] = ntohl(buf, 12);
 			}
 			return val;
