@@ -63,9 +63,10 @@ public class CameraClient implements AutoCloseable, ICameraClient {
 		}
 		return res;
 	}
-	
-	public int[] getPosition() {
-		return this.getCoords();
+
+	@Override
+	public Position getPosition() {
+		return new Position(this.getCoords());
 	}
 
 	public int[] getCoords() {
