@@ -17,4 +17,9 @@ public class MoveToCommandParameters implements CommandParameters {
 	public int getTargetY() {
 		return targetY;
 	}
+
+	@Override
+	public String toString() {
+		return targetX + ", " + targetY;
+	}
 }

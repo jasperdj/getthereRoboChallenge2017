@@ -34,12 +34,15 @@ public class RoboJar {
 		System.out.println("Search and destroy!");
 		System.out.println("Camera connectie: " + this.getCameraClient().getPosition());
 		System.out.println("Get body distance: " + this.getSerialClient().getBodyDistance());
-		this.getCommandStack().add(new CommandWithParams(Command.MOVE_TO, new MoveToCommandParameters(0, 0)));
+		this.getCommandStack().add(new CommandWithParams(Command.MOVE_TO, new MoveToCommandParameters(this.getCameraClient().getPosition().getX(), 0)));
 
 		mainLoop: while (!this.getCommandStack().isEmpty()) {
 			switch (this.getCommandStack().peek().getCommand()) {
 				case MOVE_TO:
-					this.handleMoveToCommand(this.getCommandStack().peek().getParameters());
+					this.handleMoveToCommand();
+					break;
+				case ROTATE:
+					this.handleRotateCommand();
 					break;
 				default:
 					throw new RuntimeException("Don't know how to run command " + this.getCommandStack().peek().getCommand());
@@ -48,27 +51,32 @@ public class RoboJar {
 
 		System.out.println("Command stack is empty. Exit...");
 	}
+	
+	private void handleRotateCommand() {
+		RotateCommandParameters parameters = (RotateCommandParameters) this.getCommandStack().peek().getParameters();
+		
+	}
 
-	private void handleMoveToCommand(CommandParameters inputParameters) {
-		MoveToCommandParameters parameters = (MoveToCommandParameters) inputParameters;
+	private void handleMoveToCommand() {
+		MoveToCommandParameters parameters = (MoveToCommandParameters) this.getCommandStack().peek().getParameters();
 
 		moveLoop: while (true) {
 			//Determine direction
 			Position position = this.getCameraClient().getPosition();
-
+			System.out.println("Moving from '"+position+"' to '"+parameters+"'");
+			
 			//Are we there yet?
 			boolean onXTarget = Math.abs(position.getX() - parameters.getTargetX()) < 20;
 			boolean onYTarget = Math.abs(position.getY() - parameters.getTargetY()) < 20;
 			if(onXTarget && onYTarget){
-				System.out.println("Target position reached");
+				System.out.println("Target position ('"+parameters+"') reached ('"+position+"')");
 				//Target position reached
 				this.getCommandStack().pop();
 				break moveLoop;
 			}
 			
-			System.out.println("Target position not reached");
 			//Determine direction to travel to
-			boolean needToRotate = true;
+			boolean needToRotate = false;
 			int targetRadial = 123;
 			if (needToRotate) {
 				//Correct direction
@@ -76,11 +84,20 @@ public class RoboJar {
 				break moveLoop;
 			} else {
 				//Move to position
+				int targetSpeed = 200;
+				
+				//If close by, move slower
+				if((Math.abs(position.getX() - parameters.getTargetX()) < 50) || Math.abs(position.getY() - parameters.getTargetY()) < 50){
+					targetSpeed = 100;
+				}
+				System.out.println("Move forward at speed "+targetSpeed);
+				this.getSerialClient().setLeftSpeed(targetSpeed);
+				this.getSerialClient().setRightSpeed(targetSpeed);
 			}
 
 			//Sleep so that the robot can move
 			try {
-				Thread.sleep(50);
+				Thread.sleep(500);
 			} catch (InterruptedException ign) {
 			}
 		}

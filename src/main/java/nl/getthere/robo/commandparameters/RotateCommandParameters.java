@@ -11,4 +11,8 @@ public class RotateCommandParameters implements CommandParameters {
 	public int getTargetRadial() {
 		return targetRadial;
 	}
+	@Override
+	public String toString() {
+		return ""+targetRadial;
+	}
 }
