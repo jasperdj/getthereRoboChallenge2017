@@ -1,6 +1,7 @@
 package nl.getthere.robo.aangeleverd.mock;
 
 
+@SuppressWarnings("ALL")
 public class RoboMock {
     public final static double DELTA_T = 0.02;  // 20 milliseconds
     public final static double BASE_LENGTH = 0.30;
@@ -167,7 +168,7 @@ public class RoboMock {
         System.out.println("start");
         RoboMock robo = new RoboMock();
         robo.setLeftSpeed(-200);
-        robo.setRightSpeed(-200);
+        robo.setRightSpeed(200);
         while (true) {
             try {Thread.sleep(500);} catch (InterruptedException ignore) {}
             int[] pose = robo.getPose();
