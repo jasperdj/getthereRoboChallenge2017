@@ -46,11 +46,13 @@ public class SerialClient {
 		//	const byte cStop = 0x08;    - Full Stop
 	}
 
-	public void getBodyDistance() {
-		//		A0    -  daarna twee bytes met afstand   | deze waarde ontvang je 60 ms 
+	public int getBodyDistance() {
+		//		A0    -  daarna twee bytes met afstand   | deze waarde ontvang je 60 ms
+		return -1;
 	}
 
-	public void getGunDistance() {
+	public int getGunDistance() {
 		//		B0   -   daarna twee bytes met afstand    | deze waarde ontvang je na commando 0x07
+		return -1;
 	}
 }
