@@ -91,7 +91,7 @@ public class RoboClnt implements AutoCloseable {
 				val = new int[4];
 				val[0] = ntohl(buf, 0);
 				val[1] = ntohl(buf, 4);
-				val[2] = ntohl(buf, 8);
+				val[2] = -ntohl(buf, 8);
 				val[3] = ntohl(buf, 12);
 			}
 			return val;
@@ -104,7 +104,8 @@ public class RoboClnt implements AutoCloseable {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-		try (RoboClnt r = new RoboClnt("192.168.1.26")) {
+		System.out.println("Running RoboClnt");
+		try (RoboClnt r = new RoboClnt("192.168.0.103")) {
 			int[] val = r.getCoords();
 			for (int v : val) {
 				System.out.println(v);

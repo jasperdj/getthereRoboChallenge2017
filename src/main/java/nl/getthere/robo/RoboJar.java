@@ -44,6 +44,7 @@ public class RoboJar {
 		/*this.getCommandStack().add(new CommandWithParams(Command.MOVE_TO, new MoveToCommandParameters(this.getCameraClient().getPosition().getX() + 100, this.getCameraClient().getPosition().getY() + 100)));*/
 		this.getCommandStack().add(new CommandWithParams(Command.LOOK_AROUND));
 
+		//this.getCommandStack().add(new CommandWithParams(Command.MOVE_TO, new MoveToCommandParameters(0, 0)));
 
 		mainLoop: while (!this.getCommandStack().isEmpty()) {
 			switch (this.getCommandStack().peek().getCommand()) {
