@@ -1,7 +1,11 @@
 package nl.getthere.robo.aangeleverd.mock;
 
+import java.io.ObjectInputStream.GetField;
 
-public class RoboMock {
+import nl.getthere.robo.ICameraClient;
+import nl.getthere.robo.ISerialClient;
+
+public class RoboMock implements ISerialClient, ICameraClient {
     public final static double DELTA_T = 0.02;  // 20 milliseconds
     public final static double BASE_LENGTH = 0.30;
     public final static double MOTOR_RATIO = 250;
@@ -116,6 +120,7 @@ public class RoboMock {
     }
     
     
+    @Override
     public synchronized void setRightSpeed(int val) {
         if (!inEmergency) {
             if (val < -200) val = -200;
@@ -132,7 +137,8 @@ public class RoboMock {
         }
     }
     
-    
+
+    @Override
     public synchronized void setLeftSpeed(int val) {
         if (!inEmergency) {
             if (val < -200) val = -200;
@@ -147,6 +153,11 @@ public class RoboMock {
             }
             vl = val / MOTOR_RATIO;
         }
+    }
+    
+    @Override
+    public int[] getPosition() {
+    	return this.getPose();
     }
     
     
@@ -174,6 +185,49 @@ public class RoboMock {
             System.out.println(pose[0] + " " + pose[1] + " " + pose[2]);
         }
     }
+
+
+	@Override
+	public void fireRocket() {
+		System.out.println("FIRE!");
+	}
+
+
+	@Override
+	public void setServoDirection(int degrees) {
+		// TODO Auto-generated method stub
+		System.out.println("setServoDirection "+degrees);
+		
+	}
+
+
+	@Override
+	public void requestGunDistance() {
+		// TODO Auto-generated method stub
+		System.out.println("requestGunDistance");
+	}
+
+
+	@Override
+	public void fullStop() {
+		// TODO Auto-generated method stub
+		System.out.println("STOP!");
+		
+	}
+
+
+	@Override
+	public int getBodyDistance() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public int getGunDistance() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
 
 

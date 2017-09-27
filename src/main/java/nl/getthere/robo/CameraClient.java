@@ -9,7 +9,7 @@ import java.net.Socket;
  *
  * @author woelen
  */
-public class CameraClient implements AutoCloseable {
+public class CameraClient implements AutoCloseable, ICameraClient {
 	public static final int ROBO_PORT = 11111;
 
 	String host = "127.0.0.1";
@@ -62,6 +62,10 @@ public class CameraClient implements AutoCloseable {
 			res |= b[i + offset] & 0xff;
 		}
 		return res;
+	}
+	
+	public int[] getPosition() {
+		return this.getCoords();
 	}
 
 	public int[] getCoords() {
