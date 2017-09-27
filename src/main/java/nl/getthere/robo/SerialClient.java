@@ -1,16 +1,13 @@
 package nl.getthere.robo;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
-import jdk.internal.util.xml.impl.Input;
-import nl.getthere.robo.aangeleverd.mock.TwoWaySerialComm;
-
-import java.io.*;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  *
@@ -22,13 +19,8 @@ public class SerialClient implements ISerialClient  {
 	RobotData robotData;
 
 	class RobotData {
-		private AtomicInteger bodyDistance;
-		private AtomicInteger gunDistance;
-
-		public RobotData() {
-			bodyDistance.set(0);
-			gunDistance.set(0);
-		}
+		private AtomicInteger bodyDistance = new AtomicInteger();
+		private AtomicInteger gunDistance = new AtomicInteger();
 
 		public AtomicInteger getBodyDistance() {
 			return bodyDistance;
